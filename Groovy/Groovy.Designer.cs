@@ -39,9 +39,9 @@
             this.current_playlist_display = new System.Windows.Forms.Label();
             this.filter_music_textbox = new System.Windows.Forms.TextBox();
             this.filter_music_search_picturebox = new System.Windows.Forms.PictureBox();
-            this.skipButton = new System.Windows.Forms.Button();
+            this.playNestSongButton = new System.Windows.Forms.Button();
             this.togglePlaybackButton = new System.Windows.Forms.Button();
-            this.rewindingButton = new System.Windows.Forms.Button();
+            this.playLastSongButton = new System.Windows.Forms.Button();
             this.forwardButton = new System.Windows.Forms.Button();
             this.playlists_sidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon_and_name_display)).BeginInit();
@@ -177,20 +177,20 @@
             this.filter_music_search_picturebox.TabIndex = 7;
             this.filter_music_search_picturebox.TabStop = false;
             // 
-            // skipButton
+            // playNestSongButton
             // 
-            this.skipButton.BackColor = System.Drawing.Color.Red;
-            this.skipButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.skipButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.skipButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.skipButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.skipButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.skipButton.Location = new System.Drawing.Point(276, 150);
-            this.skipButton.Name = "skipButton";
-            this.skipButton.Size = new System.Drawing.Size(40, 34);
-            this.skipButton.TabIndex = 9;
-            this.skipButton.UseVisualStyleBackColor = false;
-            this.skipButton.Click += new System.EventHandler(this.stopButton_Click);
+            this.playNestSongButton.BackColor = System.Drawing.Color.Red;
+            this.playNestSongButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.playNestSongButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.playNestSongButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.playNestSongButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playNestSongButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.playNestSongButton.Location = new System.Drawing.Point(276, 150);
+            this.playNestSongButton.Name = "playNestSongButton";
+            this.playNestSongButton.Size = new System.Drawing.Size(40, 34);
+            this.playNestSongButton.TabIndex = 9;
+            this.playNestSongButton.UseVisualStyleBackColor = false;
+            this.playNestSongButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
             // togglePlaybackButton
             // 
@@ -205,20 +205,22 @@
             this.togglePlaybackButton.Size = new System.Drawing.Size(40, 34);
             this.togglePlaybackButton.TabIndex = 10;
             this.togglePlaybackButton.UseVisualStyleBackColor = false;
+            this.togglePlaybackButton.Click += new System.EventHandler(this.togglePlaybackButton_Click);
             // 
-            // rewindingButton
+            // playLastSongButton
             // 
-            this.rewindingButton.BackColor = System.Drawing.Color.Orange;
-            this.rewindingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.rewindingButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.rewindingButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.rewindingButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rewindingButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.rewindingButton.Location = new System.Drawing.Point(276, 190);
-            this.rewindingButton.Name = "rewindingButton";
-            this.rewindingButton.Size = new System.Drawing.Size(40, 34);
-            this.rewindingButton.TabIndex = 11;
-            this.rewindingButton.UseVisualStyleBackColor = false;
+            this.playLastSongButton.BackColor = System.Drawing.Color.Orange;
+            this.playLastSongButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.playLastSongButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.playLastSongButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.playLastSongButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playLastSongButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.playLastSongButton.Location = new System.Drawing.Point(276, 190);
+            this.playLastSongButton.Name = "playLastSongButton";
+            this.playLastSongButton.Size = new System.Drawing.Size(40, 34);
+            this.playLastSongButton.TabIndex = 11;
+            this.playLastSongButton.UseVisualStyleBackColor = false;
+            this.playLastSongButton.Click += new System.EventHandler(this.playLastSongButton_Click);
             // 
             // forwardButton
             // 
@@ -228,7 +230,7 @@
             this.forwardButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.forwardButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.forwardButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.forwardButton.Location = new System.Drawing.Point(276, 230);
+            this.forwardButton.Location = new System.Drawing.Point(276, 363);
             this.forwardButton.Name = "forwardButton";
             this.forwardButton.Size = new System.Drawing.Size(40, 34);
             this.forwardButton.TabIndex = 12;
@@ -241,9 +243,9 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.ClientSize = new System.Drawing.Size(1904, 1041);
             this.Controls.Add(this.forwardButton);
-            this.Controls.Add(this.rewindingButton);
+            this.Controls.Add(this.playLastSongButton);
             this.Controls.Add(this.togglePlaybackButton);
-            this.Controls.Add(this.skipButton);
+            this.Controls.Add(this.playNestSongButton);
             this.Controls.Add(this.filter_music_search_picturebox);
             this.Controls.Add(this.filter_music_textbox);
             this.Controls.Add(this.current_playlist_display);
@@ -278,8 +280,8 @@
         private TextBox filter_music_textbox;
         private PictureBox filter_music_search_picturebox;
         private Button togglePlaybackButton;
-        private Button rewindingButton;
+        private Button playLastSongButton;
         private Button forwardButton;
-        private Button skipButton;
+        private Button playNestSongButton;
     }
 }

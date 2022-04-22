@@ -7,9 +7,9 @@ namespace Groovy
     public partial class Groovy : Form
     {
         /// <summary>
-        /// Executes: Messagebox.Show(x); where x is any type
+        /// Executes: Messagebox.Show(x); where all arguments are is any type
         /// </summary>
-        /// <param name="x">The thing you want to be displayed on the screen; can be of any type</param>
+        /// <param name="x">The value you want to be displayed on the screen; can be of any type</param>
         public static void display(object x, object y = null, object z = null, object a = null, object b = null)
         {
             string[] args = { x != null ? x.ToString(): null, y != null ? y.ToString() : null, z != null ? z.ToString() : null, a != null ? a.ToString() : null, b != null ? b.ToString() : null };
@@ -20,8 +20,11 @@ namespace Groovy
                 {
                     if (arg.GetType().IsArray)
                     {
+                        MessageBox.Show("in");
                         foreach (object ele in arg)
-                            toShow += (toShow != "") ? ", " + ele : ele;
+                        {
+                            toShow += (toShow != "") ? ", " + ele.ToString() : ele.ToString();
+                        }
                     }
                     toShow += (toShow != "") ? ", " + arg : arg;
                 }
@@ -32,6 +35,9 @@ namespace Groovy
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
         private List<string> MusicQueue = new List<string>();
+        private List<string> PreviouslyPlayedMusic = new List<string>();
+        private string CurrentlyPlayingSong;
+        private string TheLastPlayedSong;
 
         public Groovy()
         {
@@ -215,6 +221,15 @@ namespace Groovy
             if (outputDevice?.PlaybackState == PlaybackState.Playing || outputDevice?.PlaybackState == PlaybackState.Paused)
                 return;
 
+            // prevent a song from playing twice in a row
+            if (MusicQueue.Count > 1)
+            {
+                if (MusicQueue[0] == MusicQueue[1])
+                {
+                    MusicQueue.RemoveAt(0);
+                }
+            }
+
             // play music
             if (outputDevice == null)
             {
@@ -226,13 +241,36 @@ namespace Groovy
                 if (MusicQueue.Count > 0)
                 {
                     audioFile = new AudioFileReader(MusicQueue[0]);
-                    outputDevice.Init(audioFile);
+                    try
+                    {
+                        outputDevice.Init(audioFile);
+                    }
+                    catch (NAudio.MmException) 
+                    {
+                        MessageBox.Show("Could not find an audio device. Try connecting headphones or a speaker", "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        outputDevice.Dispose();
+                        audioFile.Dispose();
+                        audioFile = null;
+                        outputDevice = null;
+                        
+                        return;
+                    }
                 }
                 else
                     return; // no music is left in the queue
             }
+
+            // update the CurrentlyPlayingSong variable
+            CurrentlyPlayingSong = MusicQueue[0];
+
+            // do not keep track of songs that have been played over 50 songs ago
+            if (PreviouslyPlayedMusic.Count >= 50)
+                PreviouslyPlayedMusic.RemoveAt(PreviouslyPlayedMusic.Count - 1);
+
             // remove song from queue
             MusicQueue.RemoveAt(0);
+            
+            // play the music
             outputDevice.Play();
         }
 
@@ -326,12 +364,53 @@ namespace Groovy
                 audioFile = null;
             }
             catch (NullReferenceException) { };
+
+            // add the currently playing song 
+            if (CurrentlyPlayingSong != null)
+            {
+                PreviouslyPlayedMusic.Insert(0, CurrentlyPlayingSong);
+            }
             playSong();
         }
 
         private void addSongToQueue(string path)
         {
             MusicQueue.Add(path);
+        }
+
+        private void togglePlaybackButton_Click(object sender, EventArgs e)
+        {
+            if (outputDevice?.PlaybackState == PlaybackState.Playing)
+                outputDevice.Pause();
+            else if (outputDevice?.PlaybackState == PlaybackState.Paused)
+                outputDevice?.Play();
+        }
+
+        private void playLastSongButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // add the previously played song to the current queue so it plays when the current song is skipped
+                MusicQueue.Insert(0, PreviouslyPlayedMusic[0]);
+
+                // add the currently playing song to the queue, behind the previously played song that will play soon
+                // this is to have the song that was skipped to play the one before (which is right now the CurrentlyPlayingSong)
+                // be next in line after the one that will be played now (PreviouslyPlayedMusic[0])
+                MusicQueue.Insert(1, CurrentlyPlayingSong);
+
+                // set CurrentlyPlayingSong to null so it's not added to the previouslyPlayedMusic again
+                CurrentlyPlayingSong = null;
+
+                // remove it from the previously played queue
+                PreviouslyPlayedMusic.RemoveAt(0);
+
+                // stop playing music to trigger the reset sequence for the player
+                if (outputDevice?.PlaybackState == PlaybackState.Playing || outputDevice?.PlaybackState == PlaybackState.Paused)
+                    outputDevice?.Stop();
+                else
+                    OnPlaybackStopped(null, null);
+            } catch (ArgumentOutOfRangeException) { }
+            catch (IndexOutOfRangeException) { };
         }
     }
 }
