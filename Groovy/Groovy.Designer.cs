@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Groovy));
             this.playlists_list = new System.Windows.Forms.ListBox();
             this.playlists_sidebar = new System.Windows.Forms.Panel();
             this.icon_and_name_display = new System.Windows.Forms.PictureBox();
@@ -36,18 +37,23 @@
             this.songs_list = new System.Windows.Forms.ListBox();
             this.replaySong_button = new System.Windows.Forms.Button();
             this.current_playlist_display = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.filter_music_textbox = new System.Windows.Forms.TextBox();
+            this.filter_music_search_picturebox = new System.Windows.Forms.PictureBox();
+            this.skipButton = new System.Windows.Forms.Button();
+            this.togglePlaybackButton = new System.Windows.Forms.Button();
+            this.rewindingButton = new System.Windows.Forms.Button();
+            this.forwardButton = new System.Windows.Forms.Button();
             this.playlists_sidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon_and_name_display)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.search_magnifying_glass_icon)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.filter_music_search_picturebox)).BeginInit();
             this.SuspendLayout();
             // 
             // playlists_list
             // 
             this.playlists_list.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.playlists_list.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.playlists_list.Cursor = System.Windows.Forms.Cursors.Hand;
             this.playlists_list.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.playlists_list.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(130)))), ((int)(((byte)(50)))));
             this.playlists_list.FormattingEnabled = true;
@@ -82,6 +88,7 @@
             // 
             // search_magnifying_glass_icon
             // 
+            this.search_magnifying_glass_icon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.search_magnifying_glass_icon.Image = global::Groovy.Properties.Resources.searchMagnifyingGlass;
             this.search_magnifying_glass_icon.Location = new System.Drawing.Point(12, 77);
             this.search_magnifying_glass_icon.Name = "search_magnifying_glass_icon";
@@ -93,10 +100,11 @@
             // playlist_searchbox
             // 
             this.playlist_searchbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.playlist_searchbox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.playlist_searchbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(130)))), ((int)(((byte)(50)))));
             this.playlist_searchbox.Location = new System.Drawing.Point(44, 77);
             this.playlist_searchbox.Name = "playlist_searchbox";
-            this.playlist_searchbox.PlaceholderText = "Search";
+            this.playlist_searchbox.PlaceholderText = "Find New Music";
             this.playlist_searchbox.Size = new System.Drawing.Size(213, 23);
             this.playlist_searchbox.TabIndex = 4;
             this.playlist_searchbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.playlist_searchbox_KeyPress);
@@ -105,6 +113,7 @@
             // 
             this.songs_list.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.songs_list.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.songs_list.Cursor = System.Windows.Forms.Cursors.Hand;
             this.songs_list.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.songs_list.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(130)))), ((int)(((byte)(50)))));
             this.songs_list.FormattingEnabled = true;
@@ -112,7 +121,7 @@
             this.songs_list.Items.AddRange(new object[] {
             "list of songs in a selected playlist"});
             this.songs_list.Location = new System.Drawing.Point(334, 70);
-            this.songs_list.MaximumSize = new System.Drawing.Size(2000, 2000);
+            this.songs_list.MaximumSize = new System.Drawing.Size(200000, 200000);
             this.songs_list.Name = "songs_list";
             this.songs_list.Size = new System.Drawing.Size(1452, 926);
             this.songs_list.Sorted = true;
@@ -123,6 +132,7 @@
             // 
             this.replaySong_button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.replaySong_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.replaySong_button.Cursor = System.Windows.Forms.Cursors.Hand;
             this.replaySong_button.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.replaySong_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.replaySong_button.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
@@ -145,24 +155,84 @@
             this.current_playlist_display.TabIndex = 6;
             this.current_playlist_display.Text = "current_playlist_display";
             // 
-            // textBox1
+            // filter_music_textbox
             // 
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.textBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(130)))), ((int)(((byte)(50)))));
-            this.textBox1.Location = new System.Drawing.Point(1554, 77);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.PlaceholderText = "Filter Songs";
-            this.textBox1.Size = new System.Drawing.Size(203, 23);
-            this.textBox1.TabIndex = 7;
+            this.filter_music_textbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.filter_music_textbox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.filter_music_textbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(130)))), ((int)(((byte)(50)))));
+            this.filter_music_textbox.Location = new System.Drawing.Point(1554, 77);
+            this.filter_music_textbox.Name = "filter_music_textbox";
+            this.filter_music_textbox.PlaceholderText = "Filter Music";
+            this.filter_music_textbox.Size = new System.Drawing.Size(203, 23);
+            this.filter_music_textbox.TabIndex = 7;
+            this.filter_music_textbox.TextChanged += new System.EventHandler(this.filter_songs_textbox_TextChanged);
             // 
-            // pictureBox1
+            // filter_music_search_picturebox
             // 
-            this.pictureBox1.Image = global::Groovy.Properties.Resources.searchMagnifyingGlassLighterBackground;
-            this.pictureBox1.Location = new System.Drawing.Point(1525, 77);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(23, 23);
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
+            this.filter_music_search_picturebox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.filter_music_search_picturebox.Image = global::Groovy.Properties.Resources.searchMagnifyingGlassLighterBackground;
+            this.filter_music_search_picturebox.Location = new System.Drawing.Point(1525, 77);
+            this.filter_music_search_picturebox.Name = "filter_music_search_picturebox";
+            this.filter_music_search_picturebox.Size = new System.Drawing.Size(23, 23);
+            this.filter_music_search_picturebox.TabIndex = 7;
+            this.filter_music_search_picturebox.TabStop = false;
+            // 
+            // skipButton
+            // 
+            this.skipButton.BackColor = System.Drawing.Color.Red;
+            this.skipButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.skipButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.skipButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.skipButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.skipButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.skipButton.Location = new System.Drawing.Point(276, 150);
+            this.skipButton.Name = "skipButton";
+            this.skipButton.Size = new System.Drawing.Size(40, 34);
+            this.skipButton.TabIndex = 9;
+            this.skipButton.UseVisualStyleBackColor = false;
+            this.skipButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
+            // togglePlaybackButton
+            // 
+            this.togglePlaybackButton.BackColor = System.Drawing.Color.Lime;
+            this.togglePlaybackButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.togglePlaybackButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.togglePlaybackButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.togglePlaybackButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.togglePlaybackButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.togglePlaybackButton.Location = new System.Drawing.Point(276, 110);
+            this.togglePlaybackButton.Name = "togglePlaybackButton";
+            this.togglePlaybackButton.Size = new System.Drawing.Size(40, 34);
+            this.togglePlaybackButton.TabIndex = 10;
+            this.togglePlaybackButton.UseVisualStyleBackColor = false;
+            // 
+            // rewindingButton
+            // 
+            this.rewindingButton.BackColor = System.Drawing.Color.Orange;
+            this.rewindingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.rewindingButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rewindingButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.rewindingButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rewindingButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.rewindingButton.Location = new System.Drawing.Point(276, 190);
+            this.rewindingButton.Name = "rewindingButton";
+            this.rewindingButton.Size = new System.Drawing.Size(40, 34);
+            this.rewindingButton.TabIndex = 11;
+            this.rewindingButton.UseVisualStyleBackColor = false;
+            // 
+            // forwardButton
+            // 
+            this.forwardButton.BackColor = System.Drawing.Color.Pink;
+            this.forwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.forwardButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.forwardButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.forwardButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.forwardButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.forwardButton.Location = new System.Drawing.Point(276, 230);
+            this.forwardButton.Name = "forwardButton";
+            this.forwardButton.Size = new System.Drawing.Size(40, 34);
+            this.forwardButton.TabIndex = 12;
+            this.forwardButton.UseVisualStyleBackColor = false;
             // 
             // Groovy
             // 
@@ -170,13 +240,18 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.ClientSize = new System.Drawing.Size(1904, 1041);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.forwardButton);
+            this.Controls.Add(this.rewindingButton);
+            this.Controls.Add(this.togglePlaybackButton);
+            this.Controls.Add(this.skipButton);
+            this.Controls.Add(this.filter_music_search_picturebox);
+            this.Controls.Add(this.filter_music_textbox);
             this.Controls.Add(this.current_playlist_display);
             this.Controls.Add(this.replaySong_button);
             this.Controls.Add(this.songs_list);
             this.Controls.Add(this.playlists_sidebar);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Groovy";
             this.Text = "Groovy";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -184,7 +259,7 @@
             this.playlists_sidebar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon_and_name_display)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.search_magnifying_glass_icon)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.filter_music_search_picturebox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,7 +275,11 @@
         private ListBox songs_list;
         private Button replaySong_button;
         private Label current_playlist_display;
-        private TextBox textBox1;
-        private PictureBox pictureBox1;
+        private TextBox filter_music_textbox;
+        private PictureBox filter_music_search_picturebox;
+        private Button togglePlaybackButton;
+        private Button rewindingButton;
+        private Button forwardButton;
+        private Button skipButton;
     }
 }
