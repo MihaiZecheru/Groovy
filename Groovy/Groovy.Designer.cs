@@ -39,10 +39,11 @@
             this.current_playlist_display = new System.Windows.Forms.Label();
             this.filter_music_textbox = new System.Windows.Forms.TextBox();
             this.filter_music_search_picturebox = new System.Windows.Forms.PictureBox();
-            this.playNestSongButton = new System.Windows.Forms.Button();
+            this.playNextSongButton = new System.Windows.Forms.Button();
             this.togglePlaybackButton = new System.Windows.Forms.Button();
             this.playLastSongButton = new System.Windows.Forms.Button();
-            this.forwardButton = new System.Windows.Forms.Button();
+            this.scrub15forwardButton = new System.Windows.Forms.Button();
+            this.scrub15backwardButton = new System.Windows.Forms.Button();
             this.playlists_sidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon_and_name_display)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.search_magnifying_glass_icon)).BeginInit();
@@ -177,20 +178,20 @@
             this.filter_music_search_picturebox.TabIndex = 7;
             this.filter_music_search_picturebox.TabStop = false;
             // 
-            // playNestSongButton
+            // playNextSongButton
             // 
-            this.playNestSongButton.BackColor = System.Drawing.Color.Red;
-            this.playNestSongButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.playNestSongButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.playNestSongButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.playNestSongButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.playNestSongButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.playNestSongButton.Location = new System.Drawing.Point(276, 150);
-            this.playNestSongButton.Name = "playNestSongButton";
-            this.playNestSongButton.Size = new System.Drawing.Size(40, 34);
-            this.playNestSongButton.TabIndex = 9;
-            this.playNestSongButton.UseVisualStyleBackColor = false;
-            this.playNestSongButton.Click += new System.EventHandler(this.stopButton_Click);
+            this.playNextSongButton.BackColor = System.Drawing.Color.Red;
+            this.playNextSongButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.playNextSongButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.playNextSongButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.playNextSongButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playNextSongButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.playNextSongButton.Location = new System.Drawing.Point(276, 150);
+            this.playNextSongButton.Name = "playNextSongButton";
+            this.playNextSongButton.Size = new System.Drawing.Size(40, 34);
+            this.playNextSongButton.TabIndex = 9;
+            this.playNextSongButton.UseVisualStyleBackColor = false;
+            this.playNextSongButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
             // togglePlaybackButton
             // 
@@ -222,19 +223,33 @@
             this.playLastSongButton.UseVisualStyleBackColor = false;
             this.playLastSongButton.Click += new System.EventHandler(this.playLastSongButton_Click);
             // 
-            // forwardButton
+            // scrub15forwardButton
             // 
-            this.forwardButton.BackColor = System.Drawing.Color.Pink;
-            this.forwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.forwardButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.forwardButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.forwardButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.forwardButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.forwardButton.Location = new System.Drawing.Point(276, 363);
-            this.forwardButton.Name = "forwardButton";
-            this.forwardButton.Size = new System.Drawing.Size(40, 34);
-            this.forwardButton.TabIndex = 12;
-            this.forwardButton.UseVisualStyleBackColor = false;
+            this.scrub15forwardButton.BackColor = System.Drawing.Color.Pink;
+            this.scrub15forwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.scrub15forwardButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.scrub15forwardButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.scrub15forwardButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.scrub15forwardButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.scrub15forwardButton.Location = new System.Drawing.Point(276, 363);
+            this.scrub15forwardButton.Name = "scrub15forwardButton";
+            this.scrub15forwardButton.Size = new System.Drawing.Size(40, 34);
+            this.scrub15forwardButton.TabIndex = 12;
+            this.scrub15forwardButton.UseVisualStyleBackColor = false;
+            // 
+            // scrub15backwardButton
+            // 
+            this.scrub15backwardButton.BackColor = System.Drawing.Color.Blue;
+            this.scrub15backwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.scrub15backwardButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.scrub15backwardButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.scrub15backwardButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.scrub15backwardButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.scrub15backwardButton.Location = new System.Drawing.Point(276, 403);
+            this.scrub15backwardButton.Name = "scrub15backwardButton";
+            this.scrub15backwardButton.Size = new System.Drawing.Size(40, 34);
+            this.scrub15backwardButton.TabIndex = 13;
+            this.scrub15backwardButton.UseVisualStyleBackColor = false;
             // 
             // Groovy
             // 
@@ -242,10 +257,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.ClientSize = new System.Drawing.Size(1904, 1041);
-            this.Controls.Add(this.forwardButton);
+            this.Controls.Add(this.scrub15backwardButton);
+            this.Controls.Add(this.scrub15forwardButton);
             this.Controls.Add(this.playLastSongButton);
             this.Controls.Add(this.togglePlaybackButton);
-            this.Controls.Add(this.playNestSongButton);
+            this.Controls.Add(this.playNextSongButton);
             this.Controls.Add(this.filter_music_search_picturebox);
             this.Controls.Add(this.filter_music_textbox);
             this.Controls.Add(this.current_playlist_display);
@@ -281,7 +297,8 @@
         private PictureBox filter_music_search_picturebox;
         private Button togglePlaybackButton;
         private Button playLastSongButton;
-        private Button forwardButton;
-        private Button playNestSongButton;
+        private Button scrub15forwardButton;
+        private Button playNextSongButton;
+        private Button scrub15backwardButton;
     }
 }

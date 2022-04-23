@@ -306,6 +306,15 @@ namespace Groovy
         private int previousTextLength = 0;
         private void filter_songs_textbox_TextChanged(object sender, EventArgs e)
         {
+            string playlist = (string)this.playlists_list.Items[previouslySelectedPlaylistIndex];
+            if (playlist == "queue")
+            {
+                // clear the "removedSongs" list, as all music will be added back to the list of songs when a new playlist is clicked
+                temporarilyRemovedSongs.Clear();
+                return; // counters the error where all the music from "temporarily removed songs" is appended to the queue list
+            }
+
+
             List<string> toRemove = new List<string>();
             string text = Tools.Strip(this.filter_music_textbox.Text.ToLower());
 
