@@ -21,9 +21,7 @@ namespace Groovy
         static void SetupSystemFiles()
         {
             if (!Directory.Exists(@"C:\groovy"))
-            {
-                Directory.CreateDirectory(@"C:\groovy\favorites");
-            }
+                Directory.CreateDirectory(@"C:\groovy\Favorites");
         }
     }
 }
