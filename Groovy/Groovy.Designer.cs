@@ -185,10 +185,11 @@
             this.currently_playing_song_display.Size = new System.Drawing.Size(363, 37);
             this.currently_playing_song_display.TabIndex = 6;
             this.currently_playing_song_display.Text = "current_playing_song_display";
+            this.currently_playing_song_display.MouseDown += new System.Windows.Forms.MouseEventHandler(this.currently_playing_song_display_MouseDown);
+            this.currently_playing_song_display.MouseEnter += new System.EventHandler(this.currently_playing_song_display_MouseEnter);
             // 
             // filter_music_textbox
             // 
-            this.filter_music_textbox.AcceptsReturn = true;
             this.filter_music_textbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
             this.filter_music_textbox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.filter_music_textbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(130)))), ((int)(((byte)(50)))));
