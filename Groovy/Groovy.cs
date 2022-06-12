@@ -10,14 +10,14 @@ namespace Groovy
         public static void Display(params object[] args)
         {
             string toShow = "";
-            foreach (string arg in args)
+            foreach (object arg in args)
             {
                 if (arg != null)
                 {
                     if (arg.GetType().IsArray)
                     {
                         toShow += '\n';
-                        foreach (object ele in arg)
+                        foreach (object ele in (object[])arg)
                             toShow += (toShow != "") ? ", " + ele.ToString() : ele.ToString();
                     }
                     toShow += (toShow != "") ? ", " + arg : arg;
@@ -45,7 +45,7 @@ namespace Groovy
             this.songs_list.Items.Clear();
             this.currently_playing_song_display.Text = "";
             StartPlaybackButtonThread();
-            StartSongRemovedFromMusicQueueEventListenerThread();
+            songRemovedFromMusicQueueEventListener();
             SetVolumeFromFile();
             PopulatePlaylistsListbox();
             DisplayFirstPlaylist();
@@ -69,16 +69,16 @@ namespace Groovy
         }
 
         private List<Playlist> Playlists = new List<Playlist>();
-        private string musicfilePath { get; set; }
 
         /// <summary>
         /// Adds all playlists to the playlist_list sidebar element including "All Music", "queue", and ?:\Music
         /// </summary>
         private void PopulatePlaylistsListbox()
         {
-            /* add queue, this is not a playlist */
+            /* add queue, this is not a playlist, it's a collection of the upcoming songs */
 
-            this.playlists_list.Items.Add("queue");
+            this.playlists_list.Items.Add("Queue");
+            this.Playlists.Add(new Playlist(name: "Queue", songlist: MusicQueue));
 
             /* find and add <char>:\Music (C:\Music, D:\Music, etc) */
 
@@ -119,15 +119,26 @@ namespace Groovy
 
             /* add "All Music" playlist, which contains every song from all playlists */
 
+            int length = 0;
+            for (int i = 0; i < this.Playlists.Count; i++) length += this.Playlists[i].Count();
+
             List<Song> _songs = new List<Song>();
+            List<string> added_names = new List<string>();
             foreach (Playlist p in this.Playlists)
             {
-                foreach (Song s in p) _songs.Add(s);
+                foreach (Song s in p)
+                {
+                    if (!added_names.Contains(s.Name))
+                    {
+                        added_names.Add(s.Name);
+                        _songs.Add(s);
+                    }
+                }
             }
 
-            Playlist PlaylistAll = new Playlist(name: "All Music", songlist: _songs);
+            PlaylistAll = new Playlist(name: "All Music", songlist: _songs);
             this.Playlists.Insert(0, PlaylistAll);
-            this.playlists_list.Items.Add(PlaylistAll.Name);
+            this.playlists_list.Items.Insert(0, PlaylistAll.Name);
         }
 
         private void search(string query)
@@ -164,19 +175,22 @@ namespace Groovy
         {
             try
             {
-                int newIndex = this.playlists_list.SelectedIndex;
+                int selectedIndex = this.playlists_list.SelectedIndex;
 
                 // only activate this function when a new playlist is clicked
-                if (SelectedPlaylist.Index == newIndex) return;
+                if (SelectedPlaylist.Index == selectedIndex) return;
 
-                Playlist playlist = GetPlaylistByName((string)this.playlists_list.SelectedItems[0]);
-                SelectedPlaylist = new SelectedPlaylistItem(playlist, newIndex);
+                this.filter_music_textbox.Text = "";
+                this.ActiveControl = this.filter_music_textbox;
+
+                Playlist playlist = GetPlaylistByName((string)this.playlists_list.Items[selectedIndex]);
+                SelectedPlaylist = new SelectedPlaylistItem(playlist, selectedIndex);
 
                 this.playlists_list.ClearSelected();
-                this.ActiveControl = this.icon_and_name_display;
                 ShowPlaylistSongs(playlist);
             }
-            catch (IndexOutOfRangeException) { };
+            catch (IndexOutOfRangeException) { }
+            catch (ArgumentOutOfRangeException) { };
         }
 
         /// <summary>
@@ -194,34 +208,38 @@ namespace Groovy
             return null;
         }
 
+        /// <summary>
+        /// Display the given <paramref name="playlist"/>'s songs to <see cref="songs_list"/>
+        /// </summary>
+        /// <param name="playlist">The <see cref="Playlist"/> to display songs from</param>
         private void ShowPlaylistSongs(Playlist playlist)
         {
             temporarilyRemovedSongs.Clear();
-            if (playlist.Name == "queue")
+            this.songs_list.Sorted = (playlist.Name != "Queue");
+
+            // Checks if an Invoke is required, preventing the cross-thread error
+            if (this.songs_list.InvokeRequired)
             {
-                this.songs_list.Sorted = false;
-                foreach (Song song in MusicQueue)
-                    this.songs_list.Items.Add(song.Name);
+                // An invoke is a method that calls the given Delegate/Action in the same thread as the one the Control this.songs_list was made on
+                this.songs_list.Invoke(new MethodInvoker(delegate { ShowPlaylistSongs(playlist); }));
                 return;
             }
-
-            this.songs_list.Sorted = true;
-
+            
             this.songs_list.Items.Clear();
+
             DisplayedSongs.Clear();
             foreach (Song song in playlist.Songs)
             {
-                // append each song, removing the leading parent dirs and .mp3 trail
                 this.songs_list.Items.Add(song.Name);
                 DisplayedSongs.Add(song);
             }
 
-            if (playlist.Name != "queue")
+            if (playlist.Name != "Queue")
                 filter_songs_textbox_TextChanged(null, null);
         }
 
         /// <summary>
-        ///Searches through all songs in the <see cref="SelectedPlaylist"/> and returns the one that matches with the given <paramref name="name"/>
+        /// Searches through all songs in the <see cref="SelectedPlaylist"/> and returns the one that matches with the given <paramref name="name"/>
         /// </summary>
         /// <param name="name">The <paramref name="name"/> to search for</param>
         /// <returns>The <see cref="Song"/> if found; otherwise <c>null</c></returns>
@@ -237,10 +255,12 @@ namespace Groovy
 
         /// <summary>
         /// Called when the user selects a new song from the <see cref="songs_list"/>
+        /// <br></br><br></br>
+        /// Left click will add the song to queue. Middle click will play the song immediately. Right click will show an options menu.
         /// </summary>
         private void songs_list_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (currently_playing_song_display.Text == "queue")
+            if (currently_playing_song_display.Text == "Queue")
             {
                 this.songs_list.ClearSelected();
                 this.ActiveControl = this.icon_and_name_display;
@@ -278,7 +298,7 @@ namespace Groovy
                 }
             }
             // clear the currently playing song display
-            else this.currently_playing_song_display.Text = "";
+            else this.currently_playing_song_display.Text = $"{SelectedPlaylist.Playlist.Name} - Queue Empty";
 
             try
             {
@@ -327,19 +347,20 @@ namespace Groovy
                 OutputDevice.Play();
 
                 // display the currently playing song
-                this.currently_playing_song_display.Text = CurrentlyPlayingSong.Name;
+                this.currently_playing_song_display.Text = $"{SelectedPlaylist.Playlist.Name} - {CurrentlyPlayingSong.Name}";
                 this.currently_playing_song_display.Location = new Point((this.songs_list.Width - this.currently_playing_song_display.Width) / 2 + this.songs_list.Location.X, this.currently_playing_song_display.Location.Y);
             }
             catch (NAudio.MmException) { };
         }
 
         /// <summary>
-        /// Restart the current song
+        /// Restart the current song if it is currently playlist, otherwise play it again by playing the first song in the <see cref="PreviouslyPlayedSongs"/> list
         /// </summary>
         private void replaySong_button_Click(object sender, EventArgs e)
         {
             if (AudioFile != null)
                 AudioFile.Position = 0;
+            else playLastSongButton_Click(null, null);
         }
 
         /// <summary>
@@ -357,36 +378,36 @@ namespace Groovy
         /// </summary>
         private void filter_songs_textbox_TextChanged(object sender, EventArgs e)
         {
-            //if (SelectedPlaylist.Playlist.Name == "queue") return;
+            if (SelectedPlaylist.Playlist.Name == "queue") return;
 
-            //string text = Tools.Strip(this.filter_music_textbox.Text.ToLower());
+            string text = Tools.Strip(this.filter_music_textbox.Text.ToLower());
 
-            //if (text.Length >= this.previousTextLength)
-            //{
-            //    // new char was added, remove songs that do not start with the search-phrase
-            //    foreach (Song song in DisplayedSongs)
-            //    {
-            //        if (!song.Name.ToLower().Contains(text))
-            //        {
-            //            this.temporarilyRemovedSongs.Add(song);
-            //            DisplayedSongs.Remove(song);
-            //            this.songs_list.Items.Remove(song.Name);
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    // a char was removed; look through removed songs to add back
-            //    foreach (Song song in temporarilyRemovedSongs)
-            //    {
-            //        if (song.Name.Contains(text) && !this.songs_list.Items.Contains(song.Name))
-            //        {
-            //            this.songs_list.Items.Add(song);
-            //            DisplayedSongs.Add(song);
-            //        }
-            //    }
-            //}
-            //previousTextLength = text.Length;
+            if (text.Length >= this.previousTextLength)
+            {
+                // new char was added, remove songs that do not start with the search-phrase
+                foreach (Song song in DisplayedSongs.ToList())
+                {
+                    if (!song.Name.ToLower().Contains(text))
+                    {
+                        this.temporarilyRemovedSongs.Add(song);
+                        DisplayedSongs.Remove(song);
+                        this.songs_list.Items.Remove(song.Name);
+                    }
+                }
+            }
+            else
+            {
+                // a char was removed; look through removed songs to add back
+                foreach (Song song in temporarilyRemovedSongs)
+                {
+                    if (song.Name.Contains(text) && !this.songs_list.Items.Contains(song.Name))
+                    {
+                        this.songs_list.Items.Add(song.Name);
+                        DisplayedSongs.Add(song);
+                    }
+                }
+            }
+            previousTextLength = text.Length;
         }
 
         /// <summary>
@@ -396,8 +417,11 @@ namespace Groovy
         {
             Playlist playlist = this.Playlists[0];
             SelectedPlaylist = new SelectedPlaylistItem(playlist, 0);
+
             this.playlists_list.ClearSelected();
-            this.ActiveControl = this.icon_and_name_display;
+            this.ActiveControl = this.filter_music_textbox;
+            this.currently_playing_song_display.Text = $"{SelectedPlaylist.Playlist.Name} - Queue Empty";
+
             ShowPlaylistSongs(playlist);
         }
 
@@ -582,36 +606,30 @@ namespace Groovy
         private void StartPlaybackButtonThread()
         {
             Thread thread = new Thread(playbackButtonIconUpdateEventListener);
-            thread.IsBackground = true; // set daemon
+            thread.IsBackground = true;
             thread.Start();
         }
 
         /// <summary>
         /// Event listener to update the "queue" playlist each time a song is removed if a user has the "queue" playlist open
         /// </summary>
-        private void songRemovedFromMusicQueue()
+        private async void songRemovedFromMusicQueueEventListener()
         {
-            int musicQueueCount = Convert.ToInt32(MusicQueue.Count.ToString()); // deep copy syntax
-
-            while (true)
+            new Thread(() =>
             {
-                if (musicQueueCount != MusicQueue.Count)
-                {
-                    musicQueueCount = Convert.ToInt32(MusicQueue.Count.ToString());
-                    if (SelectedPlaylist.Playlist.Name == "queue")
-                        ShowPlaylistSongs(new Playlist(name: "queue", songlist: null));
-                }
-            }
-        }
+                Thread.CurrentThread.IsBackground = true;
+                int musicQueueCount = Convert.ToInt32(MusicQueue.Count.ToString()); // deep copy syntax
 
-        /// <summary>
-        /// Start a thread on the <see cref="songRemovedFromMusicQueue"/> function
-        /// </summary>
-        private void StartSongRemovedFromMusicQueueEventListenerThread()
-        {
-            Thread thread = new Thread(songRemovedFromMusicQueue);
-            thread.IsBackground = true;
-            thread.Start();
+                while (true)
+                {
+                    if (musicQueueCount != MusicQueue.Count)
+                    {
+                        musicQueueCount = Convert.ToInt32(MusicQueue.Count.ToString());
+                        if (SelectedPlaylist.Playlist.Name == "Queue")
+                            ShowPlaylistSongs(new Playlist(name: "Queue", songlist: MusicQueue));
+                    }
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -627,12 +645,28 @@ namespace Groovy
         /// </summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Space) togglePlaybackButton_Click(null, null);
-            return true;
+            if (keyData == Keys.Space ) togglePlaybackButton_Click(null, null);
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        /// <summary>
+        /// Opens an options menu for the currently playing song when the <see cref="currently_playing_song_display"/> is right-clicked
+        /// </summary>
+        private void currently_playing_song_display_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // todo: open the options menu
+            }
+        }
+
+        private void currently_playing_song_display_MouseEnter(object sender, EventArgs e)
+        {
+            this.currently_playing_song_display.Cursor = Cursors.Hand;
         }
     }
 
-    internal class SelectedPlaylistItem
+    internal struct SelectedPlaylistItem
     {
         public Playlist Playlist { get; }
         public int Index { get; }
